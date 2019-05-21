@@ -1,18 +1,8 @@
-import initialState from '../store/initialState'
-const rootReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'CHANGE_GREETING':
-      return {
-        ...state,
-        greeting: state.proposed_greeting
-      }
-    case 'PROPOSE_GREETING':
-      return {
-        ...state,
-        proposed_greeting: action.greeting
-      }
-    default:
-      return state
-  }
-}
+// import { reduxTokenAuthReducer } from 'redux-token-auth'
+import greetingReducer from './greetingReducer'
+import { combineReducers } from 'redux'
+
+const rootReducer = combineReducers({
+  greetingReducer
+})
 export default rootReducer

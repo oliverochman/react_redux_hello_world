@@ -7,7 +7,7 @@ const App = (props) => {
   return (
     <>
       <Container>
-        <Header as='h1'>{props.state.greeting}</Header>
+        <Header as='h1'>{props.state.greetingReducer.greeting}</Header>
         <Input
           placeholder='New greeting...'
           onBlur={(event) => props.dispatch({ type: 'PROPOSE_GREETING', greeting: event.target.value })}
