@@ -1,4 +1,7 @@
-import initialState from '../store/initialState'
+const initialState = {
+  greeting: 'Hello World from Redux',
+  proposed_greeting: ''
+}
 
 const greetingReducer = (state = initialState, action) => {
   switch (action.type) {

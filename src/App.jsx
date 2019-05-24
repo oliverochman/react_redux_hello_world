@@ -33,9 +33,13 @@ class App extends Component {
       avatar
     } = this.state
     registerUser({ email, password, passwordConfirmation, avatar }) // <-<-<-<-<- here's the important part <-<-<-<-<-
-      .then(console.log('yay'))
+      .then(() => {
+        let image = `data:image/png;base64,${this.props.currentUser.attributes.avatar}`
+        this.setState({
+          avatar: image
+        })
+      })
       .catch()
-
   }
 
   onAvatarDropHandler = (pictureFiles, pictureDataURLs) => {
@@ -49,7 +53,12 @@ class App extends Component {
     let login
 
     if (this.props.currentUser.isSignedIn) {
-      login = <p>Hello {this.props.currentUser.attributes.uid}</p>
+      login = (
+        <>
+          <p>Hello {this.props.currentUser.attributes.user.uid}</p>
+          <img src={`data:image/png;base64,${this.props.currentUser.attributes.avatar}`}></img>
+        </>
+      )
     } else {
       login = (
         <>
@@ -59,7 +68,6 @@ class App extends Component {
           <ImageUploader
             buttonText={"Upload your avatar (jpg/png)"}
             withPreview
-            singleImage
             withIcon
             withLabel={false}
             onChange={this.onAvatarDropHandler}
