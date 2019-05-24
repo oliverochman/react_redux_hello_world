@@ -1,7 +1,7 @@
 import {Container, Header, Button, Input} from 'semantic-ui-react'
 import { connect } from 'react-redux';
-import { signInUser } from './redux-token-auth-config' // <-- note this is YOUR file, not the redux-token-auth NPM module
-
+import { registerUser } from './redux-token-auth-config' // <-- note this is YOUR file, not the redux-token-auth NPM module
+import ImageUploader from 'react-images-upload'
 
 import React, { Component } from 'react'
 
@@ -11,27 +11,38 @@ class App extends Component {
   
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      passwordConfirmation: '',
+      avatar: ''
     };
   };
   
-  inputHandler(event) {
+  inputHandler = event => {
     this.setState({
       [event.target.id]: event.target.value
     })
   }
 
-  submitForm(e) {
+  submitForm = e => {
     e.preventDefault()
-    const { signInUser } = this.props
+    const { registerUser } = this.props
     const {
       email,
       password,
+      passwordConfirmation,
+      avatar
     } = this.state
-    signInUser({ email, password }) // <-<-<-<-<- here's the important part <-<-<-<-<-
+    registerUser({ email, password, passwordConfirmation, avatar }) // <-<-<-<-<- here's the important part <-<-<-<-<-
       .then(console.log('yay'))
       .catch()
 
+  }
+
+  onAvatarDropHandler = (pictureFiles, pictureDataURLs) => {
+    this.setState({
+      avatar: pictureDataURLs
+    })
+    console.log(pictureDataURLs);
   }
 
   render() {  
@@ -42,9 +53,21 @@ class App extends Component {
     } else {
       login = (
         <>
-          <input id="email" placeholder="email" onChange={this.inputHandler.bind(this)}></input>
-          <input id="password" placeholder="password" onChange={this.inputHandler.bind(this)}></input>
-          <button onClick={this.submitForm.bind(this)}>Login</button>
+          <input id="email" placeholder="email" onChange={this.inputHandler}></input>
+          <input id="password" type="password" placeholder="password" onChange={this.inputHandler}></input>
+          <input id="passwordConfirmation" type="password" placeholder="password confirmation" onChange={this.inputHandler}></input>
+          <ImageUploader
+            buttonText={"Upload your avatar (jpg/png)"}
+            withPreview
+            singleImage
+            withIcon
+            withLabel={false}
+            onChange={this.onAvatarDropHandler}
+            imgExtension={[".jpg", ".png"]}
+            maxFileSize={5242880}
+            singleImage={true}
+          />
+          <button onClick={this.submitForm}>Register</button>
         </>
       )
     }
@@ -76,4 +99,4 @@ const mapStateToProps = (state) => {
     currentUser: state.reduxTokenAuth.currentUser
   }
 }
-export default connect(mapStateToProps, { signInUser })(App)
+export default connect(mapStateToProps, { registerUser })(App)
