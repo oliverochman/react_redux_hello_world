@@ -1,6 +1,6 @@
 import {Container, Header, Button, Input} from 'semantic-ui-react'
 import { connect } from 'react-redux';
-import { signInUser } from './redux-token-auth-config' // <-- note this is YOUR file, not the redux-token-auth NPM module
+import { registerUser } from './redux-token-auth-config' // <-- note this is YOUR file, not the redux-token-auth NPM module
 
 
 import React, { Component } from 'react'
@@ -11,9 +11,10 @@ class App extends Component {
   
     this.state = {
       email: '',
-      password: ''
-    };
-  };
+      password: '',
+      password_confirmation: ''
+    }
+  }
   
   inputHandler(event) {
     this.setState({
@@ -23,27 +24,29 @@ class App extends Component {
 
   submitForm(e) {
     e.preventDefault()
-    const { signInUser } = this.props
+    const { registerUser } = this.props
     const {
       email,
       password,
+      password_confirmation
     } = this.state
-    signInUser({ email, password }) // <-<-<-<-<- here's the important part <-<-<-<-<-
+    registerUser({ email, password, password_confirmation }) // <-<-<-<-<- here's the important part <-<-<-<-<-
       .then(console.log('yay'))
       .catch()
 
   }
 
   render() {  
-    let login
+    let register
 
     if (this.props.currentUser.isSignedIn) {
-      login = <p>Hello {this.props.currentUser.attributes.uid}</p>
+      register = <p>Hello {this.props.currentUser.attributes.uid}</p>
     } else {
-      login = (
+      register = (
         <>
-          <input id="email" placeholder="email" onChange={this.inputHandler.bind(this)}></input>
-          <input id="password" placeholder="password" onChange={this.inputHandler.bind(this)}></input>
+          <input id="email" placeholder="Email" onChange={this.inputHandler.bind(this)}></input>
+          <input id="password" placeholder="Password" onChange={this.inputHandler.bind(this)}></input>
+          <input id="password_confirmation" placeholder="Password confirmation" onChange={this.inputHandler.bind(this)}></input>
           <button onClick={this.submitForm.bind(this)}>Login</button>
         </>
       )
@@ -64,7 +67,7 @@ class App extends Component {
             Change greeting
           </Button>
         </Container>
-        {login}
+        {register}
       </>
     )
   }
@@ -76,4 +79,4 @@ const mapStateToProps = (state) => {
     currentUser: state.reduxTokenAuth.currentUser
   }
 }
-export default connect(mapStateToProps, { signInUser })(App)
+export default connect(mapStateToProps, { registerUser })(App)

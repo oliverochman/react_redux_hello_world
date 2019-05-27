@@ -4,6 +4,9 @@ const config = {
   authUrl: 'http://localhost:3001/api/v1/auth',
   userAttributes: {
     uid: 'uid'
+  },
+  userRegistrationAttributes: {
+
   }
 }
 
