@@ -1,6 +1,7 @@
 import {Container, Header, Button, Input} from 'semantic-ui-react'
 import { connect } from 'react-redux';
-import { registerUser } from './redux-token-auth-config' // <-- note this is YOUR file, not the redux-token-auth NPM module
+import { registerUser } from './redux-token-auth-config'
+import ImageUploader from 'react-images-upload'
 
 
 import React, { Component } from 'react'
@@ -12,7 +13,8 @@ class App extends Component {
     this.state = {
       email: '',
       password: '',
-      password_confirmation: ''
+      password_confirmation: '',
+      avatar: ''
     }
   }
   
@@ -28,25 +30,53 @@ class App extends Component {
     const {
       email,
       password,
-      password_confirmation
+      password_confirmation,
+      avatar
     } = this.state
-    registerUser({ email, password, password_confirmation }) // <-<-<-<-<- here's the important part <-<-<-<-<-
-      .then(console.log('yay'))
+    registerUser({ email, password, password_confirmation, avatar })
+      .then(() => {
+        let image = `data:image/png;base64,${this.props.currentUser.attributes.avatar}`
+        this.setState({
+          avatar: image
+        })
+      })
       .catch()
 
+  }
+
+  onAvatarDropHandler = (pictureFiles, pictureDataURLs) => {
+    this.setState({
+      avatar: pictureDataURLs
+    })
+    console.log(pictureDataURLs);
   }
 
   render() {  
     let register
 
     if (this.props.currentUser.isSignedIn) {
-      register = <p>Hello {this.props.currentUser.attributes.uid}</p>
+      register = (
+        <>
+          <p>Hello {this.props.currentUser.attributes.user.uid}</p>
+          <img src={this.state.avatar}></img>
+        </>
+      ) 
     } else {
       register = (
         <>
           <input id="email" placeholder="Email" onChange={this.inputHandler.bind(this)}></input>
           <input id="password" placeholder="Password" onChange={this.inputHandler.bind(this)}></input>
           <input id="password_confirmation" placeholder="Password confirmation" onChange={this.inputHandler.bind(this)}></input>
+          <ImageUploader
+            buttonText={"Upload your avatar (jpg/png)"}
+            withPreview
+            singleImage
+            withIcon
+            withLabel={false}
+            onChange={this.onAvatarDropHandler}
+            imgExtension={[".jpg", ".png"]}
+            maxFileSize={5242880}
+          />
           <button onClick={this.submitForm.bind(this)}>Login</button>
         </>
       )

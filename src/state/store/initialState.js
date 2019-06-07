@@ -7,8 +7,6 @@ const initialState = {
         uid: ''
       },
     },
-  },
-  greeting: 'Hello World from Redux',
-  proposed_greeting: ''
+  }
 }
 export default initialState
