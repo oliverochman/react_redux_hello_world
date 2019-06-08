@@ -88,11 +88,11 @@ class App extends Component {
           <Header as='h1'>{this.props.state.greetingReducer.greeting}</Header>
           <Input
             placeholder='New greeting...'
-            onBlur={(event) => this.props.dispatch({ type: 'PROPOSE_GREETING', greeting: event.target.value })}
+            onBlur={(event) => this.props.proposeGreeting(event)}
           />
           <Button
             primary
-            onClick={() => this.props.dispatch({ type: 'CHANGE_GREETING' })}
+            onClick={() => this.props.changeGreeting()}
           >
             Change greeting
           </Button>
@@ -109,4 +109,15 @@ const mapStateToProps = (state) => {
     currentUser: state.reduxTokenAuth.currentUser
   }
 }
-export default connect(mapStateToProps, { registerUser })(App)
+
+const mapDispatchToProps = {
+  proposeGreeting: greeting => ({
+    type: 'PROPOSE_GREETING', 
+    greeting: greeting.target.value 
+  }),
+  changeGreeting: () => ({
+    type: 'CHANGE_GREETING'
+  }),
+  registerUser
+}
+export default connect(mapStateToProps, mapDispatchToProps)(App)
